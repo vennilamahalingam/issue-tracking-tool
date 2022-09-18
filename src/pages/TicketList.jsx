@@ -82,7 +82,7 @@ function TicketList({userDet})
     setShowCreateticket(data)
   }
   return(showCreateticket ? 
-      <CreateTicket userDet={userDet} handleCreateTicket={handleCreateTicketState}/>
+      <CreateTicket userDet={userDet} handleShowCreateTicket={handleCreateTicketState}/>
       :
       <div className="TicketList">
       <div className={classes.button} onClick={()=>setShowCreateticket(true)}>Create new ticket</div> 
@@ -114,9 +114,9 @@ function TicketList({userDet})
                       <TableCell align="left">{ticket.ticketNumber}</TableCell>
                     </Link>
                     <TableCell align="left">{ticket.ticketTitle}</TableCell>
-                    <TableCell align="left">{ticket.createdBy.name}</TableCell>
-                    <TableCell align="left">{ticket.assignee.name}</TableCell>
-                    <TableCell align="left">{ticket.priority}</TableCell>
+                    <TableCell align="left">{ticket.createdBy?.name}</TableCell>
+                    <TableCell align="left">{ticket.assignee?.name}</TableCell>
+                    <TableCell align="left">{ticket.priority?.name}</TableCell>
                     <TableCell align="left">{ticket.createdOn}</TableCell>
 
                   </TableRow>

@@ -12,8 +12,32 @@ import MenuItem from '@mui/material/MenuItem';
 
 import NativeSelect from '@mui/material/NativeSelect';
 
-function CreateTicket({userDet, handleCreateTicket, ticketDetails})
+function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
 {
+    const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
+    const trueTicketData = {...ticketDetails}; 
+    const [projects, setProjects] = useState([]);
+    let ticketInitialData = {
+            createdBy: {
+                "name": userDet.displayName,
+                "id" : userDet.id
+            },
+            type: {
+                id: "bug",
+                name: "bug",
+            },
+            status: {
+                id: "open",
+                name: "open",
+            },
+            priority: {
+                id: "minor",
+                name: "minor",
+            },
+    };
+    console.log(ticketInitialData)
+    const [ticketData, setTicketData] = useState(ticketDetails?ticketDetails: ticketInitialData);
     
     const useStyles = makeStyles((theme) => ({
         "formContainer":{
@@ -57,10 +81,14 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
       const getUsers = () => {
         const userRef = collection(db,"users");
         const pq = query(userRef);
-        let users = [{}];
+        let users = [];
         getDocs(pq).then((snap) => {
             snap.forEach((doc) => {
-               return users.push({data : doc.data(), id: doc.id});
+                let role = doc.data().role;
+                if(role === "developer")
+                {
+                    return users.push({data : doc.data(), id: doc.id});
+                }
             })
             setUsers(users);
         });
@@ -74,27 +102,15 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                 id: returnedDoc.id,
                 data: returnedDoc.data(),
                }]);
+
             });
             
          });
-         
       }
       useEffect(()=>{
             getUsers();
             getProjects();
       },[]);
-    const [users, setUsers] = useState([]);
-    const navigate = useNavigate();
-    const params = useParams();
-    const ticketInitialData = {
-        assignee : {
-            "name" : "",
-            "id" : ""
-        }
-    }
-    const [ticketData, setTicketData] = useState(ticketDetails?ticketDetails: ticketInitialData);
-    const [projects, setProjects] = useState([]);
-   
     const dateToTimestamp = () => {
         const currentDate = new Date();
         return currentDate.getTime();
@@ -103,32 +119,58 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
         return new Date(timeStamp);
       }
     const handleTicketCreation = async () => {
-    let ticketId = "";
     if(ticketDetails)
     {
-        let docReference = doc(db, "ticketListing", ticketData.id);
+        let history = [...ticketData?.history];
+        if(trueTicketData.status.name !== ticketData?.status.name)
+        {
+            history.push({
+                property: 'statusChanged',
+                oldValue: trueTicketData.status,
+                newValue: ticketData?.status,
+                date: dateToTimestamp()
+            })
+        }
+        if(trueTicketData.assignee.name !== ticketData?.assignee.name)
+        {
+            history.push({
+                property: 'reAssigned',
+                oldValue: trueTicketData.assignee,
+                newValue: ticketData?.assignee,
+                date: dateToTimestamp()
+            })
+        }
+
+        let docReference = doc(db, "ticketListing", ticketData?.id);
         await updateDoc(docReference, ticketData);
-        ticketId = ticketDetails.id;
+        await updateDoc(docReference, {history: history});
+
+        handleShowCreateTicket(false);
     }
     else
     {
         ticketData.ticketNumber = "4";
         ticketData.createdOn = dateToTimestamp();
+
+        ticketData.assignee = ticketData?.assignee !== undefined? ticketData?.assignee : {name: users[0].data.name, id: users[0].id};
+        ticketData.projectId = ticketData?.projectId !== undefined ? ticketData?.projectId : {name: projects[0].data.projectName, id: projects[0].id};
+
         ticketData.history = [
             {
-                property: 'ticketCreated',
-                oldValue: ticketData.createdBy,
-                newValue: ticketData.assignee,
+                property: 'ticketCreatedAndAssigned',
+                oldValue: ticketData?.createdBy,
+                newValue: ticketData?.assignee,
                 date: dateToTimestamp(),
             }
         ]
         console.log(ticketData);
         const docRef = await addDoc(collection(db,"ticketListing"),ticketData);
-        ticketId = docRef.id;
-        const docReference = doc(db, "projects", ticketData.projectId.id);
+        const ticketId = docRef.id;
+        const docReference = doc(db, "projects", ticketData?.projectId.id);
         await updateDoc(docReference, {tickets : arrayUnion(ticketId)});
+        navigate(`/ticket/${ticketId}`);
     }
-    navigate(`/ticket/${ticketId}`);
+    
     }
     const handleChange = (event, keyName) => {
         const { options } = event.target;
@@ -139,8 +181,8 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
           }
         }
     setTicketData((prev) => {
-        prev[keyName] = value;
-        return prev;});
+        return {...prev, [keyName] : value};
+    }); 
         console.log(ticketData)
     };
     const classes = useStyles();
@@ -175,14 +217,14 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                 </Box>
                 <Box className={classes.teamContainer}>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel id="demo-simple-select-standard-labels">Developer</InputLabel>
+                        <InputLabel shrink id="demo-simple-select-standard-labels">Developer</InputLabel>
                         <Select
                         native
                         onChange={(e) => handleChange(e, "assignee")}
                         labelId="demo-simple-select-standard-labels"
                         id="demo-simple-select-standard"
                         value={ticketData?.assignee?.name}
-                        label="Native"
+                        label="Developer"
                         inputProps={{
                             id: 'select-native',
                         }}
@@ -195,7 +237,7 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                         </Select>
                     </FormControl>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel id="demo-simple-select-standard-label">Submitter</InputLabel>
+                        <InputLabel shrink id="demo-simple-select-standard-label">Submitter</InputLabel>
                         <Select
                         native
                         labelId="demo-simple-select-standard-label"
@@ -210,7 +252,7 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                         </Select>
                     </FormControl>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel id="demo-simple-select-standard-labelq">Project</InputLabel>
+                        <InputLabel shrink id="demo-simple-select-standard-labelq">Project</InputLabel>
                         <Select
                         native
                         labelId="demo-simple-select-standard-labelq"
@@ -234,7 +276,7 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                         <Select
                         labelId="demo-simple-select-standard-label"
                         id="demo-simple-select-standard"
-                        value={ticketData?.priority?.name}
+                        defaultValue={ticketData?.priority?.name}
                         onChange={(e) => handleChange(e, "priority")}
                         label="type"
                         native
@@ -246,12 +288,13 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                         <option data-key="critical" value="critical">Critical</option>
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                    <FormControl
+                     variant="standard" sx={{ m: 1, minWidth: 200,}}>
                         <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
                         <Select
                         labelId="demo-simple-select-standard-label"
                         id="demo-simple-select-standard"
-                        value={ticketData?.status?.name}
+                        defaultValue={ticketData?.status?.name}
                         onChange={(e) => handleChange(e, "status")}
                         label="type"
                         native
@@ -263,12 +306,27 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                         <option data-key="inprogress" value="inprogress">Inprogress</option>
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                    <FormControl
+                     variant="standard" sx={{ m: 1, minWidth: 200,}}>
                         <InputLabel id="demo-simple-select-standard-label">Type</InputLabel>
                         <Select
                         labelId="demo-simple-select-standard-label"
                         id="demo-simple-select-standard"
-                        value={ticketData?.type?.name}
+                        defaultValue={ticketData?.type?.name}
+                        onChange={(e) => handleChange(e, "type")}
+                        label="type"
+                        native
+                        >
+                            <option data-key="bug" value="bug">Bug/Error</option>
+                            <option data-key="feature" value="feature">Feature</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                        <InputLabel shrink id="demo-simple-select-standard-label">Type</InputLabel>
+                        <Select
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        defaultValue={ticketData?.type?.name}
                         onChange={(e) => handleChange(e, "type")}
                         label="type"
                         >
@@ -278,7 +336,7 @@ function CreateTicket({userDet, handleCreateTicket, ticketDetails})
                     </FormControl>
                 </Box>
                 <div className={classes.button} onClick={handleTicketCreation}>{ticketDetails? 'Save ticket details' : 'Create ticket'}</div>
-                <div className={classes.button} onClick={()=>handleCreateTicket(false)}>{ticketDetails? 'back' : 'Back to list'}</div>
+                <div className={classes.button} onClick={()=>handleShowCreateTicket(false)}>{ticketDetails? 'back' : 'Back to list'}</div>
                 </Box>
         </div>
     )

@@ -38,3 +38,7 @@ dashboard
 login logout ui
 // user profile
 32q
+
+known issues
+not reloading after editting ticket
+creation la not taking initial values

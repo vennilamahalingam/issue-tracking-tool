@@ -120,6 +120,7 @@ function Ticket({userDet})
   const getTicket = () => {
     getDoc(doc(db, 'ticketListing',params.ticketId)).then((pquerySnap) => {
       let ticket = pquerySnap.data();
+      ticket.id = pquerySnap.id;
       setTicket(ticket);
       /*getDoc(doc(db, 'users', ticket.createdBy)).then((snap) => {
           ticket.createdBy = snap.data().name;
@@ -196,15 +197,19 @@ function Ticket({userDet})
             <div className={classes.labelPair}><div className={classes.spanText} >Ticket description</div>{ticket?.description}</div>
           </div>
           <div className={classes.subContainer}>
+            <div className={classes.labelPair}><div className={classes.spanText}>Project</div>{ticket?.projectId?.name}</div>
             <div className={classes.labelPair}><div className={classes.spanText}>Developer</div>{ticket?.assignee?.name}</div>
+          </div>
+          <div className={classes.subContainer}>
             <div className={classes.labelPair}><div className={classes.spanText} >Submitter</div>{ticket?.createdBy?.name}</div>
+            <div className={classes.labelPair}><div className={classes.spanText}>Priority</div>{ticket?.priority?.name}</div>
           </div>
           <div className={classes.subContainer}>
-            <div className={classes.labelPair}><div className={classes.spanText}>Priority</div>{ticket?.priority}</div>
-            <div className={classes.labelPair}><div className={classes.spanText} >Status</div>{ticket?.status}</div>
+            <div className={classes.labelPair}><div className={classes.spanText}>Type</div>{ticket?.type?.name}</div>
+            <div className={classes.labelPair}><div className={classes.spanText} >Status</div>{ticket?.status?.name}</div>
           </div>
           <div className={classes.subContainer}>
-            <div className={classes.labelPair}><div className={classes.spanText}>Type</div>{ticket?.type}</div>
+            
             <div className={classes.labelPair}><div className={classes.spanText} >Created</div>{ticket?.createdOn}</div>
           </div>
         </div>

@@ -186,7 +186,7 @@ function Project()
                       </Link>
                       <TableCell align="left">{ticket.assignee.name}</TableCell>
                       <TableCell align="left">{ticket.createdBy.name}</TableCell>
-                      <TableCell align="left">{ticket.status}</TableCell>
+                      <TableCell align="left">{ticket.status?.name}</TableCell>
                       <TableCell align="left">{ticket.createdOn}</TableCell>
                   </TableRow>
                 ))}
