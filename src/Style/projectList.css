@@ -1,0 +1,16 @@
+.projectList {
+    display: flex;
+    justify-content: space-between;
+    width: -webkit-calc(100% - 20px);
+    margin: 0 auto;
+}
+th
+{
+    font-weight: bold !important;
+    color: #898b8d !important;
+}
+.projectName>a
+{
+    color: #0052CC !important;
+    text-decoration: none;
+}

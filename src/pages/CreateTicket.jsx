@@ -36,17 +36,54 @@ function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
                 name: "minor",
             },
     };
-    console.log(ticketInitialData)
     const [ticketData, setTicketData] = useState(ticketDetails?ticketDetails: ticketInitialData);
-    
+    console.log(ticketDetails);
+    const submitter = ticketData.createdBy ? ticketData.createdBy : {name: userDet.displayName, id: userDet.id};
     const useStyles = makeStyles((theme) => ({
         "formContainer":{
-            padding: '250px',
-            paddingTop: '100px'
+            top: "-webkit-calc(50% - 186px)",
+            width: '800px',
+            position: 'absolute',
+            left: '-webkit-calc(50% - 305px)',
+        },
+        "formBox": {
+            border: '1px solid #d3d3d3',
+            borderRadius: '7px',
+            padding: '40px',
+            boxSizing: 'border-box',
         },
         "form": {
             display : 'flex',
             justifyContent: 'space-around',
+            alignItems:'flex-end',
+            
+        },
+        'buttonCont':{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            marginTop: '30px'
+        },
+        'button': {
+            width: '175px',
+            padding: '10px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            backgroundColor: '#0052CC',
+            borderRadius: '5px'
+            },
+            'tableTitleText' :{
+                fontSize: '20px',
+                marginBottom: '20px'
+              },
+        "teamContainer": {
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: 'space-between',
+            alignItems: "end"
         },
         "userForm": {
             display : 'flex',
@@ -55,19 +92,7 @@ function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
         "select" : {
             height: '123px',
         },
-        'button': {
-            marginLeft: '10px',
-            marginTop: '50px',
-            width: '140px',
-            textDecoration: 'underline',
-            lineHeight: '18px'
-          },
-        "teamContainer": {
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: 'space-between',
-            alignItems: "end"
-        },
+        
         "mainContainer": {
             display: 'flex',
             marginTop: '50px',
@@ -195,148 +220,141 @@ function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
                 '& .MuiTextField-root': { width: '42ch'},
               }}
             >
-                <Box className={classes.form}>
-                <TextField
-                id="standard-multiline-flexible"
-                label="Ticket title"
-                multiline
-                maxRows={4}
-                value={ticketData?.ticketTitle}
-                onChange={(e) => setTicketData((prev) => {return {...prev, "ticketTitle": e.target.value}})}
-                variant="standard"
-                />
-                <TextField
-                id="standard-multiline-flexible"
-                label="Ticket description"
-                multiline
-                maxRows={4}
-                value={ticketData?.description}
-                onChange={(e) => setTicketData((prev) => {return {...prev, "description": e.target.value}})}
-                variant="standard"
-                />
-                </Box>
-                <Box className={classes.teamContainer}>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel shrink id="demo-simple-select-standard-labels">Developer</InputLabel>
-                        <Select
-                        native
-                        onChange={(e) => handleChange(e, "assignee")}
-                        labelId="demo-simple-select-standard-labels"
-                        id="demo-simple-select-standard"
-                        value={ticketData?.assignee?.name}
-                        label="Developer"
-                        inputProps={{
-                            id: 'select-native',
-                        }}
-                        >
-                            {users.map((user, index) => (
-                            user.data?.role === "developer" && <option value ={user.data?.name} data-key= {user.id}>
-                            {user.data?.name}
-                            </option>
-                        ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel shrink id="demo-simple-select-standard-label">Submitter</InputLabel>
-                        <Select
-                        native
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        value={ticketData?.createdBy?.name}
-                        onChange = {(e) => handleChange(e, "createdBy")}
-                        label="submitter"
-                        > 
-                            <option data-key= {userDet?.id} value={userDet?.displayName}>
-                            {userDet?.displayName}
-                            </option>
-                        </Select>
-                    </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel shrink id="demo-simple-select-standard-labelq">Project</InputLabel>
-                        <Select
-                        native
-                        labelId="demo-simple-select-standard-labelq"
-                        id="demo-simple-select-standardq"
-                        value={ticketData?.projectId?.name}
-                        onChange = {(e) => handleChange(e, "projectId")}
-                        label="Project"
-                        >
-                            {projects?.map((project, index) => (
-                            <option value={project.data.projectName} data-key={project.id}>
-                            {project.data.projectName}
-                            </option>
-                        ))}
-                        </Select>
-                    </FormControl>
-                </Box>
-                <Box className={classes.teamContainer}>
-                    
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel id="demo-simple-select-standard-label">Priority</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        defaultValue={ticketData?.priority?.name}
-                        onChange={(e) => handleChange(e, "priority")}
-                        label="type"
-                        native
-                        >
-                        <option data-key="minor" value="minor">Minor</option>
-                        <option data-key="medium" value="medium">Medium</option>
+                <div className={classes.tableTitleText}>{ticketDetails ? 'Edit' : 'Create'} ticket</div>
+                <div className={classes.formBox}>
+                    <Box className={classes.form}>
+                    <TextField
+                    id="standard-multiline-flexible"
+                    label="Ticket title"
+                    multiline
+                    maxRows={4}
+                    value={ticketData?.ticketTitle}
+                    onChange={(e) => setTicketData((prev) => {return {...prev, "ticketTitle": e.target.value}})}
+                    variant="standard"
+                    />
+                    <TextField
+                    id="standard-multiline-flexible"
+                    label="Ticket description"
+                    multiline
+                    maxRows={4}
+                    value={ticketData?.description}
+                    onChange={(e) => setTicketData((prev) => {return {...prev, "description": e.target.value}})}
+                    variant="standard"
+                    />
+                    </Box>
+                    <Box className={classes.teamContainer}>
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                            <InputLabel shrink id="demo-simple-select-standard-labels">Developer</InputLabel>
+                            <Select
+                            native
+                            onChange={(e) => handleChange(e, "assignee")}
+                            labelId="demo-simple-select-standard-labels"
+                            id="demo-simple-select-standard"
+                            value={ticketData?.assignee?.name}
+                            label="Developer"
+                            inputProps={{
+                                id: 'select-native',
+                            }}
+                            >
+                                {users.map((user, index) => (
+                                user.data?.role === "developer" && <option value ={user.data?.name} data-key= {user.id}>
+                                {user.data?.name}
+                                </option>
+                            ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                            <InputLabel shrink id="demo-simple-select-standard-label">Submitter</InputLabel>
+                            <Select
+                            native
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            value={ticketData?.createdBy?.name}
+                            onChange = {(e) => handleChange(e, "createdBy")}
+                            label="submitter"
+                            > 
+                                <option data-key= {submitter?.id} value={submitter?.name}>
+                                {submitter?.name}
+                                </option>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                            <InputLabel shrink id="demo-simple-select-standard-labelq">Project</InputLabel>
+                            <Select
+                            native
+                            labelId="demo-simple-select-standard-labelq"
+                            id="demo-simple-select-standardq"
+                            value={ticketData?.projectId?.name}
+                            onChange = {(e) => handleChange(e, "projectId")}
+                            label="Project"
+                            >
+                                {projects?.map((project, index) => (
+                                <option value={project.data.projectName} data-key={project.id}>
+                                {project.data.projectName}
+                                </option>
+                            ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box className={classes.teamContainer}>
+                        
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                            <InputLabel id="demo-simple-select-standard-label">Priority</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            defaultValue={ticketData?.priority?.name}
+                            onChange={(e) => handleChange(e, "priority")}
+                            label="type"
+                            native
+                            >
+                            <option data-key="minor" value="minor">Minor</option>
+                            <option data-key="medium" value="medium">Medium</option>
 
-                        <option data-key="major" value="major">Major</option>
-                        <option data-key="critical" value="critical">Critical</option>
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                     variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        defaultValue={ticketData?.status?.name}
-                        onChange={(e) => handleChange(e, "status")}
-                        label="type"
-                        native
-                        >
-                            <option data-key="open" value="open">Open</option>
-                        <option data-key="closed" value="closed">Closed</option>
+                            <option data-key="major" value="major">Major</option>
+                            <option data-key="critical" value="critical">Critical</option>
+                            </Select>
+                        </FormControl>
+                        <FormControl
+                        variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                            <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            defaultValue={ticketData?.status?.name}
+                            onChange={(e) => handleChange(e, "status")}
+                            label="type"
+                            native
+                            >
+                                <option data-key="open" value="open">Open</option>
+                            <option data-key="closed" value="closed">Closed</option>
 
-                        <option data-key="resolved" value="resolved">Resolved</option>
-                        <option data-key="inprogress" value="inprogress">Inprogress</option>
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                     variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel id="demo-simple-select-standard-label">Type</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        defaultValue={ticketData?.type?.name}
-                        onChange={(e) => handleChange(e, "type")}
-                        label="type"
-                        native
-                        >
-                            <option data-key="bug" value="bug">Bug/Error</option>
-                            <option data-key="feature" value="feature">Feature</option>
-                        </Select>
-                    </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 200,}}>
-                        <InputLabel shrink id="demo-simple-select-standard-label">Type</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        defaultValue={ticketData?.type?.name}
-                        onChange={(e) => handleChange(e, "type")}
-                        label="type"
-                        >
-                           <option data-key="bug" value="bug">Bugs/Errors</option>
-                            <option data-key="feature" value="feature">Feature</option>
-                        </Select>
-                    </FormControl>
-                </Box>
-                <div className={classes.button} onClick={handleTicketCreation}>{ticketDetails? 'Save ticket details' : 'Create ticket'}</div>
-                <div className={classes.button} onClick={()=>handleShowCreateTicket(false)}>{ticketDetails? 'back' : 'Back to list'}</div>
+                            <option data-key="resolved" value="resolved">Resolved</option>
+                            <option data-key="inprogress" value="inprogress">Inprogress</option>
+                            </Select>
+                        </FormControl>
+                        <FormControl
+                        variant="standard" sx={{ m: 1, minWidth: 200,}}>
+                            <InputLabel id="demo-simple-select-standard-label">Type</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            defaultValue={ticketData?.type?.name}
+                            onChange={(e) => handleChange(e, "type")}
+                            label="type"
+                            native
+                            >
+                                <option data-key="bug" value="bug">Bug/Error</option>
+                                <option data-key="feature" value="feature">Feature</option>
+                            </Select>
+                        </FormControl>
+                        
+                    </Box>
+                    <div className={classes.buttonCont}>
+                        <div className={classes.button} onClick={handleTicketCreation}>{ticketDetails? 'Save ticket details' : 'Create ticket'}</div>
+                        <div className={classes.button} onClick={()=>handleShowCreateTicket(false)}>{ticketDetails? 'back' : 'Back to list'}</div>
+                    </div>
+                </div>
                 </Box>
         </div>
     )

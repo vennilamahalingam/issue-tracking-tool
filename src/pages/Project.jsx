@@ -11,6 +11,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {makeStyles} from "@material-ui/core/styles";
 import CreateProject from './CreateProject';
+import "../Style/project.css";
+import { Box } from '@mui/system';
+
 function Project() 
 {
   const [project, setProject] = useState({});
@@ -19,61 +22,87 @@ function Project()
   const [tickets, setTickets] = useState([]);
   const useStyles = makeStyles((theme)=>({
     'tableTitle' : {
-      backgroundColor: "#ddd",
-      margin: theme.spacing(2),
-      height: '30px',
-      padding: theme.spacing(2),
-      width: '500px',
-      top: '10px',
-      position: 'ABSOLUTE'
+      fontSize: '18px',
+      textAlign: 'left'
     },
     'tableContainer': {
-      border: '1px solid #ddd',
+    border: '1px solid #d5d8db',
       
+    },
+    'userTableContainer':{
+      border: '1px solid #d5d8db',
+      fontSize: '13px'
+    },
+    'projectDetContainer': {
+      width: '-webkit-calc(100% - 60px)',
+      margin: '0 auto',
+
     },
     'detailsContainer':{
       position: 'relative',
-      width: '-webkit-calc(100% - 60px)',
       display: 'flex',
-      marginLeft: '20px'
+      flexDirection: 'column',
+      width: '100%',
+      marginTop: '40px',
+
     },
     'detailsTitle':{
-      backgroundColor: "#ddd",
-      height: '60px',
-      width: '-webkit-calc(100% - 50px)',
-      lineHeight: '60px',
-      marginLeft: '20px',
-      paddingLeft: '10px',
-      top: '10px',
-      position: 'ABSOLUTE'
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+
     },
     'table': {
       position: 'relative',
       display: 'flex',
+      flex: 1,
       flexDirection: 'column',
-      alignItems: 'center',
-      paddingTop: '80px',
+      alignItems: 'left',
     },
     'projectTables' : {
       display: 'flex',
       justifyContent: 'space-evenly',
+      width: '100%',
+      marginBottom: '20px'
+    },
+    'projectTitle':{
+      fontWeight: '600',
+      fontSize: '20px',
+      display: 'flex',
+      width: '100%'
     },
     'labelContainer' : {
-      marginTop: '80px',
+      marginTop: '50px',
       display: 'flex',
-      justifyContent: 'space-between',
-      width: '100%',
-      marginLeft: '30px',
+      justifyContent: 'left',
+      flexDirection: 'column',
+      flex: 1,
     },
     'labelPair' : {
       display: 'flex',
       flexDirection: 'column',
-      margin: '10px'
+      marginBottom: '20px',
+      width: '-webkit-calc(100% - 30px)'
     },
     'spanText' : {
-      fontSize: '12px',
       marginBottom: '10px',
-    }
+      width: '200px',
+      color: '#292c2e',
+      fontWeight: '600'
+
+    },
+    'button': {
+      width: '55px',
+      padding: '10px',
+      height: '30px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      backgroundColor: '#0052CC',
+      borderRadius: '5px'
+    },
   }));
   const [showCreateProject, setShowCreateProject] = useState(false);
   const classes = useStyles();
@@ -114,31 +143,37 @@ function Project()
 
   getProject();
 },[params.projectid]);
-
+const timeStampToDate = (timeStamp) => {
+  let date = new Date(timeStamp).toDateString();;
+  console.log(date);
+  // date = (`${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+  return date;
+}
   return (
     showCreateProject ? 
     <CreateProject handleCreateProject={handleCreateProject} projectData = {project} teamDetails={team}/>
     :
-    <div className="App"> 
+    <div className={classes.projectDetContainer}> 
     <div className={classes.detailsContainer}>
       <div className={classes.detailsTitle}>
-        Details of the project - {project?.data?.projectName}
-        <span onClick={()=>handleCreateProject(true)}>Edit project</span>
-        <Link to={`/projects`}>Back to project list</Link>
+        <div className='breadcrumb'>Projects / {project?.data?.projectName}</div> 
+        <div className='buttonCont'>
+          <div className={classes.button} onClick={()=>handleCreateProject(true)}>Edit</div>
+          <Link to={`/projects`}><div className={classes.button}>Back</div></Link>
+        </div>
       </div>
+      <div className={classes.projectTitle}>{project?.data?.projectName}</div>
+      <Box className= "topSection">
       <div className={classes.labelContainer}>
-        <div className={classes.labelPair}><div className={classes.spanText}>Project name</div>{project?.data?.projectName}</div>
-        <div className={classes.labelPair}><div className={classes.spanText} >Project description</div>{project?.data?.description}</div>
+        <div className={classes.labelPair}><div className={classes.spanText} >Description</div>{project?.data?.description}</div>
       </div>
-    </div>
-    <div className={classes.projectTables}>
       <div className={classes.table}> 
-          <div className={classes.tableTitle}>Assigned Personnel</div>
-          <TableContainer style={{ width: 550 }} component={Paper} className={classes.tableContainer}>
+          <div className={classes.spanText}>Assigned Personnel</div>
+          <TableContainer component={Paper} className={classes.userTableContainer}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="left">User name</TableCell>
+                  <TableCell align="left">Name</TableCell>
                   <TableCell align="left">Email</TableCell>
                   <TableCell align="left">Role</TableCell>
                 </TableRow>
@@ -160,9 +195,14 @@ function Project()
             </Table>
           </TableContainer>  
       </div>
+      </Box>
+      
+    </div>
+    <div className={classes.projectTables}>
+     
       <div className={classes.table}> 
-          <div className={classes.tableTitle}>Tickets under the project</div>
-          <TableContainer style={{width: 550}} component={Paper}>
+          <div className={classes.spanText}>Tickets under the project</div>
+          <TableContainer component={Paper} className={classes.tableContainer}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -181,19 +221,23 @@ function Project()
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 
                   >
-                      <Link to={`/ticket/${ticket.id}`}>
-                        <TableCell align="left">{ticket.ticketNumber}</TableCell>
-                      </Link>
+                      
+                        <TableCell align="left" className="ticketName">
+                          <Link to={`/tickets/${ticket.id}`}>
+                            {ticket.ticketTitle}
+                        </Link>
+                      </TableCell>
                       <TableCell align="left">{ticket.assignee.name}</TableCell>
                       <TableCell align="left">{ticket.createdBy.name}</TableCell>
                       <TableCell align="left">{ticket.status?.name}</TableCell>
-                      <TableCell align="left">{ticket.createdOn}</TableCell>
+                      <TableCell align="left">{timeStampToDate(ticket.createdOn)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>  
       </div>
+      
     </div>
     </div>
   );

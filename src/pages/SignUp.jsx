@@ -1,5 +1,7 @@
 import {useState} from "react";
+import '../Style/profileStyle.css';
 import {Link, useNavigate} from "react-router-dom";
+import AdbIcon from '@mui/icons-material/Adb';
 import 'react-toastify/dist/ReactToastify.css';
 import {getAuth, createUserWithEmailAndPassword, updateProfile}  from "firebase/auth";
 import { setDoc,doc,serverTimestamp } from "firebase/firestore";
@@ -7,6 +9,7 @@ import {db} from "../firebase.config";
 import {ReactComponent as ArrowRightIcon} from "../assets/svg/keyboardArrowRightIcon.svg";
 import visibilityIcon from "../assets/svg/visibilityIcon.svg";
 import { toast } from "react-toastify";
+import { TextField } from "@material-ui/core";
 
 function SignUp({handleUserDet})
 {
@@ -55,29 +58,41 @@ function SignUp({handleUserDet})
     return (
         <>
         <div className="pageContainer">
-            <header>
+        <header>
                 <p className="pageHeader">
-                    Welcome Back!
+                  <AdbIcon/>  Ticketing tool Signup
                 </p>
             </header>
-            <form onSubmit={onSubmit}>
-                <input type="text" className="nameInput" placeholder="Name" value={name} onChange={onChange} id="name"/>
-                <input type="email" className="emailInput" placeholder="Email" value={email} onChange={onChange} id="email"/>
-                <div className="passwordInputDiv">
-                    <input type={showPassword ? "text" : "password"} placeholder="Password" id="password" value={password} className="passwordInput" onChange={onChange}/>
-                    <img src={visibilityIcon} alt="show password" onClick={()=>setShowPassword((prev)=>!prev)} className="showPassword" />
-                </div>
-                <Link to="/forgot-password" className="forgotPasswordLink">Forgot password </Link>
-                <div className="signUpBar">
-                    <p className="signUpText">
+            <form className="formCont" >
+                 <TextField
+                    id="name"
+                    label="Full name"
+                    value={name}
+                    onChange={onChange}
+                    variant="standard"
+                    />
+                     <TextField
+                id="email"
+                label="Email id"
+                value={email}
+                onChange={onChange}
+                variant="standard"
+                />
+                <TextField
+                    id="password"
+                    label="Password"
+                    value={password}
+                    onChange={onChange}
+                    variant="standard"
+                    />
+                <div className="button" onClick={onSubmit}>
                         Sign Up
-                    </p>
-                    <button className="signUpButton">
-                        <ArrowRightIcon fill="#ffff" width="34px" height= "34px" />
-                    </button>
                 </div>
             </form>
-            <Link to="/profile/signin" className="registerLink">Sign In Instead</Link>
+            <div className="bottomLinks">
+                <div>Have an account? <Link to="/profile/signin" className="">Sign In</Link></div>
+                <div>Sign in as a Demo User</div>
+            </div>
         </div>
         </>
     )

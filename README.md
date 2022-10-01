@@ -42,3 +42,8 @@ login logout ui
 known issues
 not reloading after editting ticket
 creation la not taking initial values
+
+login logout ui
+generally ui
+topbar
+restrict based on user role the editing of the project and tickets

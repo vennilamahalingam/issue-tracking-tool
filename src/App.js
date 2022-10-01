@@ -15,6 +15,7 @@ import { useEffect, useState, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CreateProject from "./pages/CreateProject";
 import TicketList from "./pages/TicketList";
+import GridTemplate from "./components/GridTemplate";
 
 const useStyles = makeStyles((theme) => ({
   right: {
@@ -50,35 +51,26 @@ const App = () => {
       return ()=>{isMounted.current = false}
   },[isMounted])
   return (
-      
+      <>
       <Router>
-          <div>
-            <Navbar handleUserDet={handleUserDet} userDet={userDet}/>
-            <Grid container>
-              <Grid item xs={2}>
-                <Leftbar userDet={userDet}/>
-              </Grid>
-              <Grid item xs={10}>
-              <Routes>
-                <Route path='/profile/*'>
-                    <Route path="signin" element={<SignIn handleUserDet={handleUserDet}/>}/>
-                    <Route path="signup" element={<SignUp handleUserDet={handleUserDet}/>}/>
-                </Route>
-                <Route path="/" element={<PrivateRoute />}>
-                  <Route path="/" element={<Dashboard userDet={userDet}/>}/>
-                  <Route path="/userrole" element={<UserRoleManagement userDet={userDet}/>}/>
-                  <Route path="/projects" element={<ProjectList userDet={userDet}/>}/>
-                  <Route path="/project/:projectid" element={<Project userDet={userDet}/>}/>
-                  <Route path="/ticket/:ticketId" element={<Ticket userDet={userDet}/>}/>
-                  <Route path="/tickets" element={<TicketList userDet={userDet}/>}/>
-                  <Route path="/createproject" element={<CreateProject userDet={userDet}/>}/>
-                  <Route path="/createproject?edit=true" element={<CreateProject userDet={userDet}/>}/>
-                </Route>
+        <Routes>
+              <Route path='/profile/*'>
+                  <Route path="signin" element={<SignIn handleUserDet={handleUserDet}/>}/>
+                  <Route path="signup" element={<SignUp handleUserDet={handleUserDet}/>}/>
+              </Route>
+              <Route path="/" element={<PrivateRoute userDet={userDet}/>}>
+                  <Route path='/' element={<GridTemplate userDet={userDet} handleUserDet={handleUserDet}/>}>
+                    <Route path="/" element={<Dashboard userDet={userDet}/>}/>
+                    <Route path="/userrole" element={<UserRoleManagement userDet={userDet}/>}/>
+                    <Route path="/projects" element={<ProjectList userDet={userDet}/>}/>
+                    <Route path="/projects/:projectid" element={<Project userDet={userDet}/>}/>
+                    <Route path="/tickets/:ticketId" element={<Ticket userDet={userDet}/>}/>
+                    <Route path="/tickets" element={<TicketList userDet={userDet}/>}/>
+                  </Route>
+               </Route>
               </Routes>
-              </Grid>
-            </Grid>
-          </div>
-      </Router>
+      </Router> 
+      </>
   );
 };
 

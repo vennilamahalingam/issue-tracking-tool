@@ -56,12 +56,24 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
 
     const useStyles = makeStyles((theme) => ({
         "formContainer":{
-            padding: '250px',
-            paddingTop: '100px'
+            top: "-webkit-calc(50% - 186px)",
+            width: '800px',
+            position: 'absolute',
+            left: '-webkit-calc(50% - 305px)',
+           
+        },
+        "formBox": {
+            border: '1px solid #d3d3d3',
+            borderRadius: '7px',
+            padding: '40px',
+            boxSizing: 'border-box',
         },
         "form": {
             display : 'flex',
             justifyContent: 'space-around',
+            alignItems:'flex-end',
+            
+
         },
         "userForm": {
             display : 'flex',
@@ -70,13 +82,27 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
         "select" : {
             height: '123px',
         },
+        'buttonCont':{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            marginTop: '30px'
+        },
         'button': {
-            marginLeft: '10px',
-            marginTop: '50px',
-            width: '140px',
-            textDecoration: 'underline',
-            lineHeight: '18px'
-          },
+            width: '175px',
+            padding: '10px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            backgroundColor: '#0052CC',
+            borderRadius: '5px'
+            },
+            'tableTitleText' :{
+                fontSize: '20px',
+                marginBottom: '20px'
+              },
         "teamContainer": {
             display: "flex",
             flexDirection: "row",
@@ -149,90 +175,97 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
                 '& .MuiTextField-root': { width: '42ch'},
               }}
             >
-                <Box className={classes.form}>
-                <TextField
-                id="standard-multiline-flexible"
-                label="Project name"
-                multiline
-                maxRows={4}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                />
-                <TextField
-                id="standard-multiline-flexible"
-                label="Project description"
-                multiline
-                maxRows={4}
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-                variant="standard"
-                />
-                </Box>
-                <Box className={classes.teamContainer}>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 370,}}>
-                        <InputLabel id="demo-simple-select-standard-label">Project Manager</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        value={team} 
-                        onChange={handleUserChange}
-                        label="Age"
-                        >
+                <div className={classes.tableTitleText}>Create project</div>
+                <div className={classes.formBox}>
+                    <Box className={classes.form}>
+                    <TextField
+                    id="standard-multiline-flexible"
+                    label="Project name"
+                    multiline
+                    maxRows={2}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    variant="standard"
+
+
+                    />
+                    <TextField
+                    id="standard-multiline-flexible"
+                    label="Project description"
+                    multiline
+                    maxRows={2}
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
+                    variant="standard"
+                    />
+                    </Box>
+                    <Box className={classes.teamContainer}>
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 370,}}>
+                            <InputLabel id="demo-simple-select-standard-label">Project Manager</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            value={team} 
+                            onChange={handleUserChange}
+                            label="Age"
+                            >
+                                {users.map((user, index) => (
+                                user.data.role === "project manager" && <MenuItem value={user.id}>
+                                {user.data.name}
+                                </MenuItem>
+                            ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{ mt: 5, minWidth: 120, maxWidth: 300 }}>
+                            <InputLabel shrink htmlFor="select-multiple-native">
+                            Developer
+                            </InputLabel>
+                            <Select
+                            multiple
+                            native
+                            value={dev}
+                            // @ts-ignore Typings are not considering `native`
+                            onChange={handleDevChange}
+                            label="Native"
+                            inputProps={{
+                                id: 'select-multiple-native',
+                            }}
+                            >
                             {users.map((user, index) => (
-                            user.data.role === "project manager" && <MenuItem value={user.id}>
-                            {user.data.name}
-                            </MenuItem>
-                        ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ mt: 5, minWidth: 120, maxWidth: 300 }}>
-                        <InputLabel shrink htmlFor="select-multiple-native">
-                        Developer
-                        </InputLabel>
-                        <Select
-                        multiple
-                        native
-                        value={dev}
-                        // @ts-ignore Typings are not considering `native`
-                        onChange={handleDevChange}
-                        label="Native"
-                        inputProps={{
-                            id: 'select-multiple-native',
-                        }}
-                        >
-                        {users.map((user, index) => (
-                            user.data.role === "developer" && <option value={user.id} data-key={user.id}>
-                            {user.data.name}
-                            </option>
-                        ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ mt: 5, minWidth: 120, maxWidth: 300 }}>
-                        <InputLabel shrink htmlFor="select-multiple-native">
-                        Submitter
-                        </InputLabel>
-                        <Select
-                        multiple
-                        native
-                        value={qa}
-                        // @ts-ignore Typings are not considering `native`
-                        onChange={handleQaChange}
-                        label="Native"
-                        inputProps={{
-                            id: 'select-multiple-native',
-                        }}
-                        >
-                        {users.map((user, index) => (
-                             user.data.role === "qa" && <option value={user.id} data-key={user.id}>
-                            {user.data.name}
-                            </option>
-                        ))}
-                        </Select>
-                    </FormControl>
-                </Box>
-                <div className={classes.button} onClick={handleProjectCreation}>{projectData? 'Save project details' : 'Create project'}</div>
-                <div className={classes.button} onClick={()=>handleCreateProject(false)}>{projectData? 'back' : 'Back to list'}</div>
+                                user.data.role === "developer" && <option value={user.id} data-key={user.id}>
+                                {user.data.name}
+                                </option>
+                            ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{ mt: 5, minWidth: 120, maxWidth: 300 }}>
+                            <InputLabel shrink htmlFor="select-multiple-native">
+                            Submitter
+                            </InputLabel>
+                            <Select
+                            multiple
+                            native
+                            value={qa}
+                            // @ts-ignore Typings are not considering `native`
+                            onChange={handleQaChange}
+                            label="Native"
+                            inputProps={{
+                                id: 'select-multiple-native',
+                            }}
+                            >
+                            {users.map((user, index) => (
+                                user.data.role === "qa" && <option value={user.id} data-key={user.id}>
+                                {user.data.name}
+                                </option>
+                            ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <div className={classes.buttonCont}>
+                        <div className={classes.button} onClick={handleProjectCreation}>{projectData? 'Update' : 'Create project'}</div>
+                        <div className={classes.button} onClick={()=>handleCreateProject(false)}>{projectData? 'back' : 'Back to list'}</div>
+                    </div>
+                </div>
                 </Box>
         </div>
     )

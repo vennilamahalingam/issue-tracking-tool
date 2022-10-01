@@ -1,0 +1,22 @@
+.breadcrumb
+{
+    font-size: 18px;
+    color: #898b8d !important;
+
+}
+.buttonCont
+{
+    display: flex;
+    justify-content: space-between;
+    width: 160px;
+}
+.ticketName>a
+{
+    color: #0052CC !important;
+    text-decoration: none;
+}
+.topSection
+{
+    display: flex;
+    justify-content: space-between;
+}

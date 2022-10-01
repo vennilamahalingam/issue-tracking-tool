@@ -11,9 +11,9 @@ return (
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="center">User name</TableCell>
-            <TableCell align="center">Email</TableCell>
-            <TableCell align="center">Role</TableCell>
+            <TableCell align="left">User name</TableCell>
+            <TableCell align="left">Email</TableCell>
+            <TableCell align="left">Role</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -22,9 +22,9 @@ return (
               key={data.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="right">{data.name}</TableCell>
-              <TableCell align="right">{data.email}</TableCell>
-              <TableCell align="right">{data.role}</TableCell>
+              <TableCell align="left">{data.name}</TableCell>
+              <TableCell align="left">{data.email}</TableCell>
+              <TableCell align="left">{data.role}</TableCell>
             </TableRow>
           ))}
         </TableBody>

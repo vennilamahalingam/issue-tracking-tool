@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import "../Style/ticket.css"
 import {useParams, Link} from "react-router-dom";
 import { updateDoc,getDoc,doc, collection, getDocs , query, where, serverTimestamp, arrayUnion} from "firebase/firestore";
 import { db } from "../firebase.config";
@@ -17,6 +18,8 @@ function Ticket({userDet})
 {
   const [ticket, setTicket] = useState({});
   const [commentText, setCommentText] = useState("");
+  const [showHistoryTab, setShowHistoryTab] = useState(true); 
+
 
   const useStyles = makeStyles((theme)=>({
     'tableTitle' : {
@@ -28,86 +31,135 @@ function Ticket({userDet})
       top: '0px',
       position: 'ABSOLUTE'
     },
+    'button': {
+      width: '55px',
+      padding: '10px',
+      height: '30px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      backgroundColor: '#0052CC',
+      borderRadius: '5px'
+    },
     'tableContainer': {
       border: '1px solid #ddd',
-      
+   
     },
     'detailsContainer':{
-      position: 'relative',
-      width: '500px',
       display: 'flex',
-      marginLeft: '20px',
-      marginTop: '30px'
+      width: '100%',
     },
     'detailsTitle':{
-      backgroundColor: "#ddd",
-      height: '60px',
-      width: 'inherit',
-      lineHeight: '60px',
-      marginLeft: '20px',
-      paddingLeft: '10px',
-      top: '10px',
-      position: 'ABSOLUTE'
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+
+    },
+    'detailsTitleText': {
+      padding: '10px',
+      borderBottom: '1px solid #ddd',
     },
     'table': {
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      paddingTop: '80px',
+      paddingTop: '40px',
     },
     'historytable': {
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'left',
-      paddingTop: '80px',
-      marginLeft: '50px'
+      paddingTop: '40px',
+
     },
     'ticketTables' : {
       display: 'flex',
       flexDirection: 'column',
     },
     'labelContainer' : {
-      marginTop: '80px',
       display: 'flex',
-      width: '500px',
-      marginLeft: '30px',
-      flexDirection: 'column'
+      marginRight: '30px',
+      flex: '2',
+      flexDirection: 'column',
     },
     'subContainer':{
       display: 'flex',
       justifyContent: 'space-between',
      
-      flexDirection: 'row'
+      flexDirection: 'column'
     },
-    'labelPair' : {
+    'ticketTitle':{
+      fontWeight: '600',
+      fontSize: '20px',
       display: 'flex',
-      flexDirection: 'column',
-      margin: '10px',
-      flex: 1
+      width: '100%'
     },
     'spanText' : {
-      fontSize: '12px',
       marginBottom: '10px',
+      width: '200px',
+      color: '#292c2e',
+      fontWeight: '600'
     },
     'commentContainer':{
       display: 'flex',
       alignItems:'end',
-      marginLeft: '100px'
+      marginTop: '40px'
     },
     'upperContainer': {
-      display: 'flex'
-    },
-    'button': {
-      marginLeft: '10px',
-      marginTop: '50px',
-      width: '140px',
-      textDecoration: 'underline',
-      lineHeight: '18px'
+      display: 'flex',
+      marginTop: '20px'
     },
     'commentBox': {
       width: '500px'
+    },
+    'labelPair' : {
+      display: 'flex',
+      flexDirection: 'row',
+      paddingLeft: '20px',
+      paddingRight: '20px',
+      paddingTop: '10px',
+      fontSize: '13px',
+    },
+    'statusText': {
+      color: '#0052CC',
+      width: 'auto',
+      border: '1px solid #0052CC',
+      paddingRight: '10px',
+      fontSize: '15px',
+      height: '20px',
+      lineHeight: '20px',
+      padding: '5px',
+      borderRadius: '5px',
+      marginBottom: '20px',
+      paddingLeft: '10px',
+      marginRight: '10px'
+    },
+    'adjacentSection' : {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: '1',
+     
+    },
+    'blueText': {
+      color: '#0052CC'
+    },
+    'detailsBtn': {
+        display: 'flex',
+
+    },
+    'detailsTable' : {
+      border: '1px solid #ddd',
+      paddingBottom: '10px',
+      borderRadius: '7px'
+    },
+    'ticketContainer': {
+      padding: '20px',
+      paddingRight: '50px',
+      paddingLeft: '50px',
+      boxSizing: 'border-box'
     }
   }));
   const [showCreateTicket, setShowCreateTicket] = useState(false);
@@ -172,97 +224,68 @@ function Ticket({userDet})
     const currentDate = new Date();
     return currentDate.getTime();
   }
-  const timeStampToDate = (timeStamp) => {
-    return new Date(timeStamp);
-  }
   useEffect(() => {
     getTicket();
     getUsers();
   },[params.ticketid]);
+  
+  const timeStampToDate = (timeStamp) => {
+    let date = new Date(timeStamp).toDateString();;
+    console.log(date);
+    // date = (`${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+    return date;
+  }
   return (
     showCreateTicket ? 
     <CreateTicket handleShowCreateTicket={handleShowCreateTicket} userDet={userDet} ticketDetails = {ticket}/>
     :
-    <div className="App"> 
+    <div className={classes.ticketContainer}> 
+     <div className={classes.detailsTitle}>
+          <div className='breadcrumb'>Tickets / {ticket?.ticketTitle}</div> 
+          <div className='buttonCont'>
+            <div className={classes.button} onClick={()=>handleShowCreateTicket(true)}>Edit</div>
+            <Link to={`/tickets`}><div className={classes.button}>Back</div></Link>
+          </div>
+        </div>
+    <div className={classes.ticketTitle}>{ticket?.ticketTitle} -  <div className={classes.blueText}> {ticket.type?.name}</div></div>
     <div className={classes.upperContainer}>
       <div className={classes.detailsContainer}>
-        <div className={classes.detailsTitle}>
-          Details of the ticket - {ticket?.data?.ticketName}
-          <span onClick={()=>handleShowCreateTicket(true)}>Edit ticket</span>
-          <Link to={`/tickets`}>Back to ticket list</Link>
-        </div>
-        <div className={classes.labelContainer}>
-          <div className={classes.subContainer}>
-            <div className={classes.labelPair}><div className={classes.spanText}>Ticket title</div>{ticket?.ticketTitle}</div>
-            <div className={classes.labelPair}><div className={classes.spanText} >Ticket description</div>{ticket?.description}</div>
+          <div className={classes.labelContainer}>
+            <div className={classes.subContainer}>
+              <div className={classes.desc}><div className={classes.spanText} >Description</div>
+              <div>
+              {ticket?.description}
+              </div>
+              </div>
+            </div>
           </div>
-          <div className={classes.subContainer}>
-            <div className={classes.labelPair}><div className={classes.spanText}>Project</div>{ticket?.projectId?.name}</div>
-            <div className={classes.labelPair}><div className={classes.spanText}>Developer</div>{ticket?.assignee?.name}</div>
+          <div className={classes.adjacentSection}>
+            <div className={classes.detailsBtn}>
+              <div className={classes.statusText}>{ticket?.status?.name}</div>
+              <div className={classes.statusText}>{ticket?.priority?.name}</div>
+            </div>
+              <div className={classes.detailsTable}>
+                <div className={classes.detailsTitleText}>Details</div>
+                <div className={classes.labelPair}><div className={classes.spanText}>Project</div><div className={classes.spanVal}>{ticket?.projectId?.name}</div></div>
+                <div className={classes.labelPair}><div className={classes.spanText}>Developer</div><div className={classes.blueText}>{ticket?.assignee?.name}</div></div>
+                <div className={classes.labelPair}><div className={classes.spanText} >Submitter</div><div className={classes.blueText}>{ticket?.createdBy?.name}</div></div>
+      
+              </div>
+              <div className='createdOn'>Created on {timeStampToDate(ticket?.createdOn)} </div>
           </div>
-          <div className={classes.subContainer}>
-            <div className={classes.labelPair}><div className={classes.spanText} >Submitter</div>{ticket?.createdBy?.name}</div>
-            <div className={classes.labelPair}><div className={classes.spanText}>Priority</div>{ticket?.priority?.name}</div>
-          </div>
-          <div className={classes.subContainer}>
-            <div className={classes.labelPair}><div className={classes.spanText}>Type</div>{ticket?.type?.name}</div>
-            <div className={classes.labelPair}><div className={classes.spanText} >Status</div>{ticket?.status?.name}</div>
-          </div>
-          <div className={classes.subContainer}>
-            
-            <div className={classes.labelPair}><div className={classes.spanText} >Created</div>{ticket?.createdOn}</div>
-          </div>
-        </div>
-        
       </div>
-      <div className={classes.ticketTables}>
-        <div className={classes.commentContainer}>
-          <TextField
-            className={classes.commentBox}
-          id="standard-multiline-flexible"
-          label="Add a new comment"
-          multiline
-          maxRows={4}
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          variant="standard"
-          />
-          <div onClick={handleNewComment} className={classes.button}>Add</div>
-        </div>
-        <div className={classes.table}> 
-        
-            <div className={classes.tableTitle}>Ticket Comments</div>
-            <TableContainer style={{ width: 550 }} component={Paper} className={classes.tableContainer}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Commenter</TableCell>
-                    <TableCell align="left">Message</TableCell>
-                    <TableCell align="left">Created</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {ticket?.comments?.map((data, index) => (
-                      <TableRow
-                      key={index}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-
-                    > 
-                      <TableCell align="left">{data.commenter?.name}</TableCell>
-                        <TableCell align="left">{data.message}</TableCell>
-                        <TableCell align="left">{data.timeStamp}</TableCell>
-
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>  
-        </div>
-      </div>
-      </div>
+    </div>
     
-    <div className={classes.historytable}> 
-          <div className={classes.tableTitle}>Ticket history</div>
+    <div className='activityTab'>
+        <div className='activityTitle'>Activity</div>
+        <div className='showSection'>
+          <div className='showTitle'>Show :</div>
+          <div className={`tabName ${showHistoryTab? 'selected' : ''}`} onClick={(e) => setShowHistoryTab(true)}>History</div>
+          <div className={`tabName ${!showHistoryTab? 'selected' : ''}`} onClick={(e) => setShowHistoryTab(false)}>Comment</div>
+        </div>
+    </div>
+    
+    {showHistoryTab ? <div className={classes.historytable}> 
           <TableContainer style={{width: 550}} component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
@@ -284,13 +307,60 @@ function Ticket({userDet})
                       <TableCell align="left">{entry.property}</TableCell>
                       <TableCell align="left">{entry.oldValue?.name}</TableCell>
                       <TableCell align="left">{entry.newValue?.name}</TableCell>
-                      <TableCell align="left">{entry.date}</TableCell>
+                      <TableCell align="left">{timeStampToDate(entry.date)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>  
-      </div>
+      </div> :
+       <div className={classes.ticketTables}>
+       <div className={classes.commentContainer}>
+         <TextField
+           className={classes.commentBox}
+         id="standard-multiline-flexible"
+         label="Add a new comment"
+         multiline
+         maxRows={4}
+         value={commentText}
+         onChange={(e) => setCommentText(e.target.value)}
+         variant="standard"
+         />
+         <div onClick={handleNewComment} className={classes.button}>Add</div>
+       </div>
+       <div className={classes.table}> 
+           <TableContainer style={{ width: 550 }} component={Paper} className={classes.tableContainer}>
+             <Table aria-label="simple table">
+               <TableHead>
+                 <TableRow>
+                   <TableCell align="left">Commenter</TableCell>
+                   <TableCell align="left">Message</TableCell>
+                   <TableCell align="left">Created</TableCell>
+                 </TableRow>
+               </TableHead>
+               <TableBody>
+                 {ticket?.comments?.map((data, index) => (
+                     <TableRow
+                     key={index}
+                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+ 
+                   > 
+                     <TableCell align="left">{data.commenter?.name}</TableCell>
+                       <TableCell align="left">{data.message}</TableCell>
+                       <TableCell align="left">{timeStampToDate(data.timeStamp)}</TableCell>
+ 
+                   </TableRow>
+                 ))}
+               </TableBody>
+             </Table>
+           </TableContainer>  
+       </div>
+     </div>
+      }
+   
+      
+    
+    
     </div>
   );
 }

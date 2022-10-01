@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import { Grid} from "@material-ui/core";
 import UserTable from '../components/UserTable';
+import '../Style/userRole.css';
 
 function UserRoleManagement() {
     const [users, setUsers] = useState([]);
@@ -52,13 +53,13 @@ function UserRoleManagement() {
     getUsers();
     }
   return (
-    <>
-        <div><h2>Manage user roles</h2></div>
+    <div className="roleManagementCont">
+        <div className="userRoleTitle">Manage user roles</div>
     <Grid container>
       <Grid item xs={4}>
       <div className="leftSection">
-        <div>
-          <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 300 }}>
+        <div className="formElement">
+          <FormControl sx={{ minWidth: 120, maxWidth: 300 }}>
             <InputLabel shrink htmlFor="select-multiple-native">
             Select user
             </InputLabel>
@@ -80,8 +81,8 @@ function UserRoleManagement() {
         </Select>
       </FormControl>
     </div>
-    <div>
-      <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 300 }}>
+    <div className="formElement">
+      <FormControl sx={{minWidth: 120, maxWidth: 300 }}>
               <InputLabel shrink htmlFor="select-multiple-native">
               role
               </InputLabel>
@@ -101,7 +102,7 @@ function UserRoleManagement() {
         </FormControl>
       </div>
       <div>
-      <Button variant="outlined" onClick={onSubmit}>SUBMIT</Button>
+      <Button className="submit" onClick={onSubmit}>Submit</Button>
       </div>
     </div>
       </Grid>
@@ -109,7 +110,7 @@ function UserRoleManagement() {
         <UserTable users={users}/>
       </Grid>
     </Grid>
-    </>
+    </div>
 
     
   );

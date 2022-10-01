@@ -12,38 +12,48 @@ import Paper from '@mui/material/Paper';
 import {Link, useParams} from  "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import CreateTicket from './CreateTicket';
+import "../Style/ticketList.css";
+
+
 function TicketList({userDet}) 
 {
   const [tickets, setTickets] = useState([ ]);
   const [showCreateticket, setShowCreateticket] = useState(false);
   const useStyles = makeStyles((theme)=>({
     'tableTitle' : {
-      backgroundColor: "#ddd",
-      margin: theme.spacing(2),
-      height: '30px',
-      padding: theme.spacing(2),
-      width: '900px',
-      top: '0px',
-      position: 'ABSOLUTE'
+      alignItems: 'center',
+      width: '100%',
+      display: 'flex',
+      boxSizing: 'border-box',
+      padding: '10px',
+      justifyContent: 'space-between'
     },
     'tableContainer': {
       border: '1px solid #ddd',
       
     },
     'table': {
+     
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: '65px',
+      width: '100%',
+    },
+    'tableTitleText' :{
+      fontSize: '20px',
     },
     'button': {
-      marginLeft: '135px',
-      marginTop: '15px',
-      width: '140px',
+      width: '175px',
       padding: '10px',
-      textDecoration: 'underline',
-      lineHeight: '18px'
+      height: '30px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      backgroundColor: '#0052CC',
+      borderRadius: '5px'
     },
     'buttonLink': {
       color: '#000'
@@ -81,19 +91,26 @@ function TicketList({userDet})
   const handleCreateTicketState = (data) => {
     setShowCreateticket(data)
   }
+  const timeStampToDate = (timeStamp) => {
+    let date = new Date(timeStamp);
+    date = (`${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()}`);
+    return date;
+  }
   return(showCreateticket ? 
       <CreateTicket userDet={userDet} handleShowCreateTicket={handleCreateTicketState}/>
       :
       <div className="TicketList">
-      <div className={classes.button} onClick={()=>setShowCreateticket(true)}>Create new ticket</div> 
       <div className={classes.table}> 
-        <div className={classes.tableTitle}>All tickets</div>
-        <TableContainer style={{ width: 950 }} component={Paper} className={classes.tableContainer}>
+        <div className={classes.tableTitle}>
+          <div className={classes.tableTitleText}>Tickets</div>
+          <div className={classes.button} onClick={()=>setShowCreateticket(true)}>Create new ticket</div> 
+        </div>
+        <TableContainer component={Paper} className={classes.tableContainer}>
             <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">Ticket Number</TableCell>
-                <TableCell align="left">Description</TableCell>
+                <TableCell align="left">Title</TableCell>
+                <TableCell align="left">Project</TableCell>
                 <TableCell align="left">Submitter</TableCell>
                 <TableCell align="left">Developer</TableCell>
                 <TableCell align="left">Status</TableCell>
@@ -110,14 +127,15 @@ function TicketList({userDet})
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 
                   >
-                    <Link to={`/ticket/${ticket.id}`}>
-                      <TableCell align="left">{ticket.ticketNumber}</TableCell>
-                    </Link>
-                    <TableCell align="left">{ticket.ticketTitle}</TableCell>
+                    
+                      <TableCell align="left" className='ticketName'><Link to={`/tickets/${ticket.id}`}>{ticket.ticketTitle}</Link></TableCell>
+                    
+                    <TableCell align="left">{ticket.projectId?.name}</TableCell>
                     <TableCell align="left">{ticket.createdBy?.name}</TableCell>
+
                     <TableCell align="left">{ticket.assignee?.name}</TableCell>
                     <TableCell align="left">{ticket.priority?.name}</TableCell>
-                    <TableCell align="left">{ticket.createdOn}</TableCell>
+                    <TableCell align="left">{timeStampToDate(ticket.createdOn)}</TableCell>
 
                   </TableRow>
                 

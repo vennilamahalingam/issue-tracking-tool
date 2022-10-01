@@ -7,6 +7,7 @@ import { Badge } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
 import LogoutIcon from '@mui/icons-material/Logout';
 import Notifications from "@material-ui/icons/Notifications";
+import PersonIcon from '@mui/icons-material/Person';
 import { Avatar } from "@material-ui/core";
 import {useState} from "react";
 import Cancel from "@material-ui/icons/Cancel"
@@ -16,6 +17,7 @@ import { getAuth, signOut } from "firebase/auth";
 const useStyles = makeStyles((theme)=>({
   large: {
       display: "none",
+
       color: alpha(theme.palette.common.black),
       [theme.breakpoints.up("sm")] : {
           display: "block"
@@ -72,6 +74,14 @@ const useStyles = makeStyles((theme)=>({
         display: "none"
     }
   },
+  blueText: {
+    color: '#0052CC'
+  },
+  titleText:{
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '20px'
+  },
   topBar:{
     position: "sticky",
     top: "0",
@@ -102,9 +112,8 @@ function Navbar({userDet, handleUserDet}) {
   return (
     <AppBar color="inherit" className={classes.topBar} >
         <Toolbar className={classes.toolbar}>
-            <Typography variant="h6" className={classes.large}>Welcome {displayName} {role}</Typography>
-            <Typography variant="h6" className={classes.small}>NDev</Typography>
-            
+            <div className={classes.titleText}><PersonIcon/> {displayName} -<span className={classes.blueText}>&nbsp;{role}</span></div>
+        
             <div className={classes.icons}>
             <div className={classes.search}>
                 <SearchIcon style= {{color: 'black'}}/>
@@ -112,14 +121,8 @@ function Navbar({userDet, handleUserDet}) {
                 <Cancel className={classes.cancel} onClick={()=>setOpen(false)}/>
             </div>
                 <SearchIcon className={classes.searchButton} onClick={searchOnClick}/>
-                <Badge color="primary" badgeContent={2} className={classes.badge}>
-                    <MailIcon style= {{color: 'black'}}/>
-                    </Badge>
-                    <Badge color="primary" badgeContent={10} className={classes.badge}>
-                    <Notifications  style= {{color: 'black'}}/>
-                    </Badge>
+                  
                     <LogoutIcon onClick={logout}/>
-                    <Avatar alt="Remy Sharp" src="https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=740" />
             </div>
         </Toolbar>
     </AppBar>

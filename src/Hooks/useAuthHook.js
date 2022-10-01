@@ -17,15 +17,18 @@ export const useAuthHook = () => {
                     if(user)
                     {
                         setLoggedIn(true);
-                        setLogDet(user);
-                        console.log(user);
+                        setLogDet(user); 
                     }
-                    setCheckingStatus(false);    
+                    else{
+                        setLoggedIn(false);
+                    }
+                    setCheckingStatus(false);  
+                    console.log(loggedIn);
                 }
             )
         }
         return ()=>{isMounted.current = false}
-    },[isMounted])
+    },[isMounted, loggedIn])
 
     return {loggedIn, checkingStatus, logDet}
 }

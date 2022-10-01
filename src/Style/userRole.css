@@ -1,0 +1,25 @@
+.userRoleTitle
+{
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+.roleManagementCont
+{
+    padding: 50px;
+}
+.formElement
+{
+    margin-bottom: 20px;
+}
+.submit
+{
+    color: #fff;
+    width: 100px;
+    height: 30px;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    border-radius: 5px;
+    justify-content: center;
+    background-color: #0052CC;
+}

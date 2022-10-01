@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import '../Style/projectList.css';
 import {Link, useParams} from  "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import CreateProject from './CreateProject';
@@ -19,17 +19,16 @@ function ProjectList()
   const [showCreateProject, setShowCreateProject] = useState(false);
   const useStyles = makeStyles((theme)=>({
     'tableTitle' : {
-      backgroundColor: "#ddd",
-      margin: theme.spacing(2),
-      height: '30px',
-      padding: theme.spacing(2),
-      width: '900px',
-      top: '0px',
-      position: 'ABSOLUTE'
+      alignItems: 'center',
+      width: '100%',
+      display: 'flex',
+      boxSizing: 'border-box',
+      padding: '10px',
+      justifyContent: 'space-between'
     },
     'tableContainer': {
       border: '1px solid #ddd',
-      
+      width: '100%',
     },
     'table': {
       position: 'relative',
@@ -37,19 +36,27 @@ function ProjectList()
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: '65px',
+      width: '100%',
     },
     'button': {
-      marginLeft: '135px',
-      marginTop: '15px',
-      width: '140px',
+      width: '175px',
       padding: '10px',
-      textDecoration: 'underline',
-      lineHeight: '18px'
+      height: '30px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      backgroundColor: '#0052CC',
+      borderRadius: '5px'
+    },
+    'tableTitleText' :{
+      fontSize: '20px',
     },
     'buttonLink': {
       color: '#000'
     }
   }));
+ 
   const classes = useStyles();
   useEffect(() => {
     const getProjects = () => {
@@ -80,10 +87,12 @@ function ProjectList()
       <CreateProject handleCreateProject={handleCreateProjectState}/>
       :
       <div className="projectList">
-      <div className={classes.button} onClick={()=>setShowCreateProject(true)}>Create new project</div> 
       <div className={classes.table}> 
-        <div className={classes.tableTitle}>All projects</div>
-        <TableContainer style={{ width: 950 }} component={Paper} className={classes.tableContainer}>
+        <div className={classes.tableTitle}>
+          <div className={classes.tableTitleText}>Projects</div>
+          <div className={classes.button} onClick={()=>setShowCreateProject(true)}>Create new project</div> 
+        </div>
+        <TableContainer component={Paper} className={classes.tableContainer}>
             <Table aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -101,9 +110,9 @@ function ProjectList()
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 
                   >
-                    <Link to={`/project/${project.id}`}>
-                      <TableCell align="left">{project.data?.projectName}</TableCell>
-                    </Link>
+                    
+                      <TableCell align="left" className='projectName'><Link to={`/projects/${project.id}`} >{project.data?.projectName}</Link></TableCell>
+                    
                     <TableCell align="left">{project.data?.description}</TableCell>
                     <TableCell align="left">{project.manager?.name}</TableCell>
 
