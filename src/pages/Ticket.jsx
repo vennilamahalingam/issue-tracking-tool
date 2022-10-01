@@ -166,7 +166,7 @@ function Ticket({userDet})
   const [users, setUsers] = useState([]);
   const classes = useStyles(); 
   const handleShowCreateTicket = (data) => {
-    setShowCreateTicket(data)
+    setShowCreateTicket((prev) => {return data;});
   }
   const params = useParams();
   const getTicket = () => {
@@ -214,7 +214,6 @@ function Ticket({userDet})
         commenter: {id: userDet.id, name: userDet.displayName},
         timeStamp: dateToTimestamp(),
       }
-      console.log(commentData);
       let docReference = doc(db, "ticketListing", params.ticketId);
       await updateDoc(docReference, {comments : arrayUnion(commentData)});
       getTicket();
@@ -227,7 +226,7 @@ function Ticket({userDet})
   useEffect(() => {
     getTicket();
     getUsers();
-  },[params.ticketid]);
+  },[params.ticketid,showCreateTicket]);
   
   const timeStampToDate = (timeStamp) => {
     let date = new Date(timeStamp).toDateString();;

@@ -111,38 +111,31 @@ function Project()
   }
   
   const params = useParams();
-  useEffect(() => {
-    const getProject = () => {
-        getDoc(doc(db, 'projects',params.projectid)).then((pquerySnap) => {
-            setProject({id:pquerySnap.id, data:pquerySnap.data()});
-            let projects = pquerySnap.data();
-            projects.tickets.forEach((ticket)=>{
-                getDoc(doc(db, 'ticketListing', ticket)).then((snap) => {
-                    let ticket = snap.data();
-                    ticket.id = snap.id;
-                    setTickets((prev)=>[...prev, ticket]);
-                    /* getDoc(doc(db, 'users', ticket.createdBy)).then((snap) => {
-                        ticket.createdBy = snap.data().name;
-                        getDoc(doc(db, 'users', ticket.assignee)).then((snap) => {
-                            ticket.assignee = snap.data().name;
-                        }).then(()=>(setTickets((prev) => [...prev,ticket])
-                        ))
-                    })*/
-                    
-                });
+  const getProject = () => {
+    getDoc(doc(db, 'projects',params.projectid)).then((pquerySnap) => {
+        setProject({id:pquerySnap.id, data:pquerySnap.data()});
+        let projects = pquerySnap.data();
+        projects.tickets.forEach((ticket)=>{
+            getDoc(doc(db, 'ticketListing', ticket)).then((snap) => {
+                let ticket = snap.data();
+                ticket.id = snap.id;
+                setTickets((prev)=>[...prev, ticket]);
                 
             });
-            projects.team.forEach((user)=>{
-                 getDoc(doc(db, 'users', user)).then((snap)=>{
-                  let team = {id: snap.id, data: snap.data()};
-                    setTeam((prev) => [...prev, team]);
-                  });
-            }); 
+            
         });
-  }
+        projects.team.forEach((user)=>{
+             getDoc(doc(db, 'users', user)).then((snap)=>{
+              let team = {id: snap.id, data: snap.data()};
+                setTeam((prev) => [...prev, team]);
+              });
+        }); 
+    });
+}
+  useEffect(() => { 
 
   getProject();
-},[params.projectid]);
+},[params.projectid, showCreateProject]);
 const timeStampToDate = (timeStamp) => {
   let date = new Date(timeStamp).toDateString();;
   console.log(date);

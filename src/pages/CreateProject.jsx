@@ -145,7 +145,7 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
         {
             let docReference = doc(db, "projects", projectData.id);
             await updateDoc(docReference, formData);
-            navigate(`/projects/${projectData.id}`);
+            handleCreateProject(false);
         }
         else
         {
