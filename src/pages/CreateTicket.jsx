@@ -193,7 +193,7 @@ function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
         const ticketId = docRef.id;
         const docReference = doc(db, "projects", ticketData?.projectId.id);
         await updateDoc(docReference, {tickets : arrayUnion(ticketId)});
-        navigate(`/ticket/${ticketId}`);
+        navigate(`/tickets/${ticketId}`);
     }
     
     }

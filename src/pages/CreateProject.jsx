@@ -145,13 +145,13 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
         {
             let docReference = doc(db, "projects", projectData.id);
             await updateDoc(docReference, formData);
-            navigate(`/project/${projectData.id}`);
+            navigate(`/projects/${projectData.id}`);
         }
         else
         {
             formData.tickets = [];
             docRef = await addDoc(collection(db,"projects"),formData);
-            navigate(`/project/${docRef.id}`);
+            navigate(`/projects/${docRef.id}`);
         }
         
       }
