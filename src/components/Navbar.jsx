@@ -1,18 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { AppBar, InputBase, Toolbar, Typography } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
 import { alpha } from "@material-ui/core";
-import { Badge } from "@material-ui/core";
-import MailIcon from "@material-ui/icons/Mail";
 import LogoutIcon from '@mui/icons-material/Logout';
-import Notifications from "@material-ui/icons/Notifications";
 import PersonIcon from '@mui/icons-material/Person';
-import { Avatar } from "@material-ui/core";
 import {useState} from "react";
-import Cancel from "@material-ui/icons/Cancel"
 import { getAuth, signOut } from "firebase/auth";
-
+import { useSelector, useDispatch } from "react-redux";
+import { updateUser} from "../actions";
+import Search from './Search.jsx';
 
 const useStyles = makeStyles((theme)=>({
   large: {
@@ -57,7 +53,6 @@ const useStyles = makeStyles((theme)=>({
     display: (props) => (!props.open ? "flex" : "none"),
      
     color: alpha(theme.palette.common.black),
-      justifyContent: "space-between",
       alignItems: "center"
   },
   badge: {
@@ -90,9 +85,12 @@ const useStyles = makeStyles((theme)=>({
 }));
 
 
-function Navbar({userDet, handleUserDet}) {
+function Navbar() {
+
+  const userDetails = useSelector(state => state);
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const {displayName, role} = userDet;
+  const {displayName, role} = userDetails;
   const classes = useStyles( {open} );
   
   const navigate = useNavigate();
@@ -100,29 +98,19 @@ function Navbar({userDet, handleUserDet}) {
     const auth = getAuth();
     signOut(auth).then(() => {
       navigate("/");
-      handleUserDet({});
+      dispatch(updateUser({}));
       console.log('Sign-out successful.');
     }).catch((error) => {
       console.log('Sign-out error.');
     });
   }
-  const searchOnClick= ()  => {
-    setOpen((prev)=>!prev);
-  }
   return (
     <AppBar color="inherit" className={classes.topBar} >
         <Toolbar className={classes.toolbar}>
             <div className={classes.titleText}><PersonIcon/> {displayName} -<span className={classes.blueText}>&nbsp;{role}</span></div>
-        
             <div className={classes.icons}>
-            <div className={classes.search}>
-                <SearchIcon style= {{color: 'black'}}/>
-                <InputBase placeholder="Search..." className={classes.input}/>
-                <Cancel className={classes.cancel} onClick={()=>setOpen(false)}/>
-            </div>
-                <SearchIcon className={classes.searchButton} onClick={searchOnClick}/>
-                  
-                    <LogoutIcon onClick={logout}/>
+              <Search/>
+                <LogoutIcon onClick={logout}/>
             </div>
         </Toolbar>
     </AppBar>
