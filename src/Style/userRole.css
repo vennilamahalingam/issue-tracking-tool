@@ -23,3 +23,21 @@
     justify-content: center;
     background-color: #0052CC;
 }
+.submitButtonCont
+{
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 30px;
+}
+.submitButton 
+{
+    width: 175px;
+    padding: 10px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background-color: #0052CC;
+    border-radius: 5px;
+    }

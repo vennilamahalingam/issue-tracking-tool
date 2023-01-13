@@ -14,9 +14,11 @@ import {
   Legend
 } from "recharts";
 import { flexbox } from '@mui/system';
+import { useSelector } from "react-redux";
 
 function Dashboard()
 {
+    const userDetails = useSelector(state => state);
     const [tickets, setTickets] = useState([]);
     const getTickets = () => {
         const ticketRef = collection(db,"ticketListing");
@@ -113,6 +115,7 @@ function Dashboard()
     ]
     return (
         <div style={{marginTop: '50px'}}>
+            <div>{console.log(userDetails)}</div>
             <div style={{display:'flex',}}>
                 <div>
                     <BarChart

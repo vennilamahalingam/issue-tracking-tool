@@ -10,10 +10,12 @@ import {ReactComponent as ArrowRightIcon} from "../assets/svg/keyboardArrowRight
 import visibilityIcon from "../assets/svg/visibilityIcon.svg";
 import { toast } from "react-toastify";
 import { TextField } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../actions";
 
-function SignUp({handleUserDet})
-{
-    console.log(handleUserDet);
+function SignUp()
+{ 
+    const dispatch = useDispatch();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -40,12 +42,12 @@ function SignUp({handleUserDet})
             delete formDataCopy.password;
             formDataCopy.timestamp = serverTimestamp();
             formDataCopy.role = 'developer';
-            handleUserDet({
+            dispatch(updateUser({
                 displayName: name,
                 email,
                 'role': 'developer',
                 id: user.uid
-            })
+            }));
             await setDoc(doc(db,'users',user.uid), formDataCopy)
 
             navigate("/");

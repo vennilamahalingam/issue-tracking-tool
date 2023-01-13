@@ -5,12 +5,14 @@ import { toast } from "react-toastify";
 import AdbIcon from '@mui/icons-material/Adb';
 import '../Style/profileStyle.css';
 import 'react-toastify/dist/ReactToastify.css';
-import {ReactComponent as ArrowRightIcon} from "../assets/svg/keyboardArrowRightIcon.svg";
-import visibilityIcon from "../assets/svg/visibilityIcon.svg";
 import { TextField } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../actions";
 
-const SignIn = ({handleUserDet}) =>
+const SignIn = () =>
 {
+    const dispatch = useDispatch();
+    const userDetails = useSelector(state => state);
     const [showPassword, setShowPassword] = useState(false);
     const [showError, setShowError] = useState(false);
     const [formData, setFormData] = useState({
@@ -37,12 +39,13 @@ const SignIn = ({handleUserDet}) =>
                 navigate("/");
                 const authData = userCredentials.user;
                 const {displayName, photoURL, email} = authData;
-                handleUserDet({
+             
+                dispatch(updateUser({
                     displayName,
                     email,
                     'role': photoURL,
                     id: authData.uid,
-                })
+                }));
                 console.log(userCredentials.user);
             }
         } catch (error) {
@@ -56,6 +59,7 @@ const SignIn = ({handleUserDet}) =>
     }
     return (
         <>
+        {console.log({userDetails})}
         <div className="pageContainer">
             <header>
                 <p className="pageHeader">

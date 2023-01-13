@@ -12,6 +12,7 @@ import '../Style/userRole.css';
 
 function UserRoleManagement() {
     const [users, setUsers] = useState([]);
+    const [updatedUser, setUpdatedUser] = useState();
     const roles = [
       'developer',
       'project manager',
@@ -47,6 +48,7 @@ function UserRoleManagement() {
     }
     const onSubmit = async () => {
       const userRef = doc(db, "users", userRole.user);
+      setUpdatedUser(userRef.user);
       await updateDoc(userRef, {
         role: userRole.role,
     });
@@ -54,24 +56,23 @@ function UserRoleManagement() {
     }
   return (
     <div className="roleManagementCont">
-        <div className="userRoleTitle">Manage user roles</div>
     <Grid container>
       <Grid item xs={4}>
       <div className="leftSection">
+      <div className="userRoleTitle">Manage user roles</div>
         <div className="formElement">
-          <FormControl sx={{ minWidth: 120, maxWidth: 300 }}>
+          <FormControl sx={{width: 200}}>
             <InputLabel shrink htmlFor="select-multiple-native">
-            Select user
+             user
             </InputLabel>
             <Select
               native
               value={userRole.user}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
               // @ts-ignore Typings are not considering `native`
               onChange={handleUserChange}
-              label="Select user"
-              inputProps={{
-                id: 'select-multiple-native',
-              }}
+              label="user"
         >
           {users.map((user, index) => (
             <option key={user.id} value={user.id}>
@@ -82,7 +83,7 @@ function UserRoleManagement() {
       </FormControl>
     </div>
     <div className="formElement">
-      <FormControl sx={{minWidth: 120, maxWidth: 300 }}>
+      <FormControl sx={{width: 200}}>
               <InputLabel shrink htmlFor="select-multiple-native">
               role
               </InputLabel>
@@ -102,7 +103,9 @@ function UserRoleManagement() {
         </FormControl>
       </div>
       <div>
-      <Button className="submit" onClick={onSubmit}>Submit</Button>
+      <div className='submitButtonCont'>
+          <div className='submitButton' onClick={onSubmit}>Submit</div>
+      </div>
       </div>
     </div>
       </Grid>

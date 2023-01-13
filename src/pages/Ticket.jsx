@@ -13,9 +13,11 @@ import Paper from '@mui/material/Paper';
 import {makeStyles} from "@material-ui/core/styles";
 import CreateTicket from './CreateTicket';
 import TextField from '@mui/material/TextField';
+import {useSelector} from 'react-redux';
 
-function Ticket({userDet}) 
+function Ticket() 
 {
+  const userDetails = useSelector(state => state);
   const [ticket, setTicket] = useState({});
   const [commentText, setCommentText] = useState("");
   const [showHistoryTab, setShowHistoryTab] = useState(true); 
@@ -211,7 +213,7 @@ function Ticket({userDet})
     {
       let commentData = {
         message: commentText,
-        commenter: {id: userDet.id, name: userDet.displayName},
+        commenter: {id: userDetails.id, name: userDetails.displayName},
         timeStamp: dateToTimestamp(),
       }
       let docReference = doc(db, "ticketListing", params.ticketId);
@@ -236,7 +238,7 @@ function Ticket({userDet})
   }
   return (
     showCreateTicket ? 
-    <CreateTicket handleShowCreateTicket={handleShowCreateTicket} userDet={userDet} ticketDetails = {ticket}/>
+    <CreateTicket handleShowCreateTicket={handleShowCreateTicket} ticketDetails = {ticket}/>
     :
     <div className={classes.ticketContainer}> 
      <div className={classes.detailsTitle}>

@@ -1,8 +1,6 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
-import { Grid, makeStyles } from "@material-ui/core";
-import Leftbar from "./components/Leftbar";
-import Navbar from "./components/Navbar";
+import { makeStyles } from "@material-ui/core";
 import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -13,9 +11,12 @@ import UserRoleManagement from "./pages/UserRoleManagement";
 import PrivateRoute from "./components/PrivateRoute";
 import { useEffect, useState, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import CreateProject from "./pages/CreateProject";
 import TicketList from "./pages/TicketList";
 import GridTemplate from "./components/GridTemplate";
+import { useDispatch } from "react-redux";
+import { updateUser } from "./actions";
+
+
 
 const useStyles = makeStyles((theme) => ({
   right: {
@@ -27,11 +28,8 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const classes = useStyles();
-  const [userDet, setUserDet] = useState({});
-  const handleUserDet = (data) => {
-    setUserDet(data);
-    console.log(userDet);
-  }
+  const dispatch = useDispatch();
+
   const isMounted = useRef(true);
 
   useEffect(()=>{
@@ -42,7 +40,8 @@ const App = () => {
           onAuthStateChanged(auth,(user) => {
                   if(user)
                   {
-                      setUserDet({displayName: user.displayName, role: user.photoURL, email: user.email, id: user.uid});
+                      dispatch(updateUser({displayName: user.displayName, role: user.photoURL, email: user.email, id: user.uid}));
+                      // setUserDet({displayName: user.displayName, role: user.photoURL, email: user.email, id: user.uid});
                   }
                     
               }
@@ -52,24 +51,25 @@ const App = () => {
   },[isMounted])
   return (
       <>
-      <Router>
-        <Routes>
-              <Route path='/profile/*'>
-                  <Route path="signin" element={<SignIn handleUserDet={handleUserDet}/>}/>
-                  <Route path="signup" element={<SignUp handleUserDet={handleUserDet}/>}/>
-              </Route>
-              <Route path="/" element={<PrivateRoute userDet={userDet}/>}>
-                  <Route path='/' element={<GridTemplate userDet={userDet} handleUserDet={handleUserDet}/>}>
-                    <Route path="/" element={<Dashboard userDet={userDet}/>}/>
-                    <Route path="/userrole" element={<UserRoleManagement userDet={userDet}/>}/>
-                    <Route path="/projects" element={<ProjectList userDet={userDet}/>}/>
-                    <Route path="/projects/:projectid" element={<Project userDet={userDet}/>}/>
-                    <Route path="/tickets/:ticketId" element={<Ticket userDet={userDet}/>}/>
-                    <Route path="/tickets" element={<TicketList userDet={userDet}/>}/>
-                  </Route>
-               </Route>
-              </Routes>
-      </Router> 
+     
+        <Router>
+          <Routes>
+                <Route path='/profile/*'>
+                    <Route path="signin" element={<SignIn/>}/>
+                    <Route path="signup" element={<SignUp/>}/>
+                </Route>
+                <Route path="/" element={<PrivateRoute />}>
+                    <Route path='/' element={<GridTemplate/>}>
+                      <Route path="/" element={<Dashboard/>}/>
+                      <Route path="/userrole" element={<UserRoleManagement/>}/>
+                      <Route path="/projects" element={<ProjectList/>}/>
+                      <Route path="/projects/:projectid" element={<Project/>}/>
+                      <Route path="/tickets/:ticketId" element={<Ticket/>}/>
+                      <Route path="/tickets" element={<TicketList/>}/>
+                    </Route>
+                </Route>
+                </Routes>
+        </Router>
       </>
   );
 };

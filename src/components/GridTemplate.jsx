@@ -4,13 +4,13 @@ import { Outlet } from "react-router-dom";
 import Leftbar from "../components/Leftbar";
 import Navbar from "../components/Navbar";
 
-function GridTemplate({handleUserDet, userDet}) {
+function GridTemplate() {
   return (
     <div>
-        <Navbar handleUserDet={handleUserDet} userDet={userDet}/>
+        <Navbar/>
         <Grid container>
             <Grid item xs={2}>
-                <Leftbar userDet={userDet}/>
+                <Leftbar/>
             </Grid>
             <Grid item xs={10}>
                 <Outlet/>

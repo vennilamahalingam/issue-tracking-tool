@@ -1,0 +1,12 @@
+.suggestionList
+{
+    position: absolute;
+    background-color: #f7f7f7;
+    top: 33px;
+    width: 300px;
+    left: 72px;
+}
+.searchCont
+{
+    position: relative;
+}

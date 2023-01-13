@@ -15,7 +15,8 @@ import CreateTicket from './CreateTicket';
 import "../Style/ticketList.css";
 
 
-function TicketList({userDet}) 
+
+function TicketList() 
 {
   const [tickets, setTickets] = useState([ ]);
   const [showCreateticket, setShowCreateticket] = useState(false);
@@ -69,17 +70,6 @@ function TicketList({userDet})
             let ticketData = returnedDoc.data();
             ticketData.id = returnedDoc.id;
             setTickets((prev) => [...prev, ticketData]);
-          /*   getDoc(doc(db, "users", returnedDoc.data().assignee)).then((snap)=>{
-                ticketData.assignee = snap.data();
-                getDoc(doc(db, "users", ticketData.createdBy)).then((snap)=>{
-                    ticketData.createdBy = snap.data();
-                    getDoc(doc(db, "projectList", ticketData.projectId)).then((snap) => {
-                        ticketData.project = snap.data();
-                        setTickets((prev)=> [...prev, ticketData]);
-                    })
-                })
-            })
-            */
         });
 
        });
@@ -97,7 +87,7 @@ function TicketList({userDet})
     return date;
   }
   return(showCreateticket ? 
-      <CreateTicket userDet={userDet} handleShowCreateTicket={handleCreateTicketState}/>
+      <CreateTicket handleShowCreateTicket={handleCreateTicketState}/>
       :
       <div className="TicketList">
       <div className={classes.table}> 

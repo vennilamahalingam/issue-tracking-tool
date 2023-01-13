@@ -11,17 +11,20 @@ import {useNavigate, useParams} from "react-router-dom";
 import MenuItem from '@mui/material/MenuItem';
 
 import NativeSelect from '@mui/material/NativeSelect';
+import {useSelector} from 'react-redux';
 
-function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
+
+function CreateTicket({handleShowCreateTicket, ticketDetails})
 {
+    const userDetails = useSelector(state => state);
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
     const trueTicketData = {...ticketDetails}; 
     const [projects, setProjects] = useState([]);
     let ticketInitialData = {
             createdBy: {
-                "name": userDet.displayName,
-                "id" : userDet.id
+                "name": userDetails.displayName,
+                "id" : userDetails.id
             },
             type: {
                 id: "bug",
@@ -38,7 +41,7 @@ function CreateTicket({userDet, handleShowCreateTicket, ticketDetails})
     };
     const [ticketData, setTicketData] = useState(ticketDetails?ticketDetails: ticketInitialData);
     console.log(ticketDetails);
-    const submitter = ticketData.createdBy ? ticketData.createdBy : {name: userDet.displayName, id: userDet.id};
+    const submitter = ticketData.createdBy ? ticketData.createdBy : {name: userDetails.displayName, id: userDetails.id};
     const useStyles = makeStyles((theme) => ({
         "formContainer":{
             top: "-webkit-calc(50% - 186px)",

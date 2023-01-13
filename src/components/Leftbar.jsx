@@ -6,6 +6,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 import {makeStyles} from "@material-ui/core/styles";
 import Home from "@material-ui/icons/Home";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { useSelector } from "react-redux";
 const useStyles = makeStyles((theme)=>({
   container : {
     color: "#fafbfc",
@@ -55,12 +56,13 @@ const useStyles = makeStyles((theme)=>({
   }
 }));
 
-function Leftbar({userDet}) {
+function Leftbar() {
+  const userDetails = useSelector(state => state);
+  
   const navigate = useNavigate();
   const location = useLocation();
   function pathMatchRoute(route)
     {
-      console.log(location.pathname.split("/")[1]);
         if(location.pathname.split("/")[1] === route)
         {
             return true;
@@ -77,7 +79,7 @@ function Leftbar({userDet}) {
         <DashboardIcon/>
         <Typography className={classes.text}>Dashboard</Typography>
       </div>
-      {userDet?.role?.toLowerCase() === "admin" && <div className={ pathMatchRoute("userrole") 
+      {userDetails?.role?.toLowerCase() === "admin" && <div className={ pathMatchRoute("userrole") 
                               ? classes.itemSelected
                               : classes.item
                               } onClick={()=>navigate("/userrole")}>

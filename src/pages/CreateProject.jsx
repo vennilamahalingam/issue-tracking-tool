@@ -50,9 +50,7 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
     const [team, setTeam] = useState(teamInitialValue);
     const [dev, setDev] = useState(devInitialValue);
     const [qa, setQa] = useState(qaInitialValue);
-    
-    console.log(dev)
-    console.log(qa)
+   
 
     const useStyles = makeStyles((theme) => ({
         "formContainer":{
@@ -139,7 +137,6 @@ function CreateProject({handleCreateProject, projectData, teamDetails})
             description: desc,
             team: [team,...dev,...qa],
         };
-        console.log(formData);
         let docRef = ""; 
         if(projectData)
         {

@@ -115,15 +115,16 @@ function Project()
     getDoc(doc(db, 'projects',params.projectid)).then((pquerySnap) => {
         setProject({id:pquerySnap.id, data:pquerySnap.data()});
         let projects = pquerySnap.data();
-        projects.tickets.forEach((ticket)=>{
+        /*projects.tickets.forEach((ticket)=>{
             getDoc(doc(db, 'ticketListing', ticket)).then((snap) => {
                 let ticket = snap.data();
+                console.log(ticket);
                 ticket.id = snap.id;
                 setTickets((prev)=>[...prev, ticket]);
-                
             });
             
-        });
+        });*/
+
         projects.team.forEach((user)=>{
              getDoc(doc(db, 'users', user)).then((snap)=>{
               let team = {id: snap.id, data: snap.data()};
@@ -132,9 +133,26 @@ function Project()
         }); 
     });
 }
+const getTickets = () => {
+  const ticketRef = collection(db,"ticketListing");
+  const pq = query(ticketRef)
+  getDocs(pq).then((pquerySnap)=>{
+    pquerySnap.forEach((returnedDoc)=>{
+        let ticketData = returnedDoc.data();
+        if(ticketData.projectId.id === params.projectid)
+        {
+          ticketData.id = returnedDoc.id;
+          setTickets((prev) => [...prev, ticketData]);
+        }
+    });
+
+   });
+   
+}
   useEffect(() => { 
 
   getProject();
+  getTickets();
 },[params.projectid, showCreateProject]);
 const timeStampToDate = (timeStamp) => {
   let date = new Date(timeStamp).toDateString();;
