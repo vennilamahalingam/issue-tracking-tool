@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react'
 import SearchIcon from "@material-ui/icons/Search";
 import { InputBase } from "@material-ui/core";
@@ -139,4 +140,4 @@ function Search() {
   )
 }
 
-export default Search
+export default Search;
