@@ -111,31 +111,24 @@ function Project()
   }
   
   const params = useParams();
-  const getProject = () => {
+const getProject = () => {
     getDoc(doc(db, 'projects',params.projectid)).then((pquerySnap) => {
         setProject({id:pquerySnap.id, data:pquerySnap.data()});
-        let projects = pquerySnap.data();
-        /*projects.tickets.forEach((ticket)=>{
-            getDoc(doc(db, 'ticketListing', ticket)).then((snap) => {
-                let ticket = snap.data();
-                console.log(ticket);
-                ticket.id = snap.id;
-                setTickets((prev)=>[...prev, ticket]);
-            });
-            
-        });*/
 
+        let projects = pquerySnap.data();
+        setTeam([])
         projects.team.forEach((user)=>{
-             getDoc(doc(db, 'users', user)).then((snap)=>{
-              let team = {id: snap.id, data: snap.data()};
-                setTeam((prev) => [...prev, team]);
-              });
+            getDoc(doc(db, 'users', user)).then((snap)=>{
+            let team = {id: snap.id, data: snap.data()};
+              setTeam((prev) => [...prev, team]);
+            });
         }); 
     });
 }
 const getTickets = () => {
   const ticketRef = collection(db,"ticketListing");
   const pq = query(ticketRef)
+  setTickets([]);
   getDocs(pq).then((pquerySnap)=>{
     pquerySnap.forEach((returnedDoc)=>{
         let ticketData = returnedDoc.data();
@@ -150,7 +143,7 @@ const getTickets = () => {
    
 }
   useEffect(() => { 
-
+    console.log("newcall is made")
   getProject();
   getTickets();
 },[params.projectid, showCreateProject]);
