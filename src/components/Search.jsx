@@ -122,14 +122,14 @@ function Search() {
                   <ListSubheader>Tickets</ListSubheader>} 
                     {filteredList.list?.map((item)=>(
                           <ListItemButton component="a" href={`/tickets/${item.id}`}>
-                              <ListItemText primary= {item.title} />
+                              <ListItemText primary= {item?.title} />
                           </ListItemButton>
                       ))}
                 {filteredList.projects && filteredList.projects.length !== 0 &&
                   <ListSubheader>Projects</ListSubheader>} 
                     {filteredList.projects?.map((item)=>(
                           <ListItemButton component="a" href={`/projects/${item.id}`}>
-                              <ListItemText primary= {item.title} />
+                              <ListItemText primary= {item?.title} />
                           </ListItemButton>
                       ))}
           </div>

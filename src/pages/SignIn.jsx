@@ -82,6 +82,7 @@ const SignIn = () =>
                     id="password"
                     label="Password"
                     value={password}
+                    type="password"
                     onChange={onChange}
                     variant="standard"
                     />

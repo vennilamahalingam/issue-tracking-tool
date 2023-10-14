@@ -86,6 +86,7 @@ function SignUp()
                     value={password}
                     onChange={onChange}
                     variant="standard"
+                    type="password"
                     />
                 <div className="button" onClick={onSubmit}>
                         Sign Up
