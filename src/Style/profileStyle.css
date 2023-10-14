@@ -70,10 +70,13 @@
 .bottomLinks>div
 {
     margin-bottom: 6px;
+    cursor: pointer;
 }
 .formCont>div
 {
     margin-bottom: 5px;
+    cursor: pointer;
+
 }
 .demoUserLink
 {

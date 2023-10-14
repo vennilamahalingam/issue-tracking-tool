@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword,sendPasswordResetEmail } from "firebase/auth";
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { TextField } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../actions";
+
 
 const SignIn = () =>
 {
@@ -94,7 +95,7 @@ const SignIn = () =>
             </form>
             <div className="bottomLinks">
                 <div className="demoUserLink" onClick={handleDemoUser}>Sign in as a Demo User</div>
-                <div>Forgot your <Link to="/forgot-password" className="">password?</Link></div>
+                <div>Forgot your <Link to="/profile/forgotPassword" className="">password?</Link></div>                
                 <div>Create an account? <Link to="/profile/signup" className="">Sign Up</Link></div>
             </div>
         </div>

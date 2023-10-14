@@ -81,6 +81,9 @@ const useStyles = makeStyles((theme)=>({
     position: "sticky",
     top: "0",
     backgroundColor: alpha(theme.palette.common.white),
+  },
+  logout:{
+    cursor:"pointer"
   }
 }));
 
@@ -109,8 +112,8 @@ function Navbar() {
         <Toolbar className={classes.toolbar}>
             <div className={classes.titleText}><PersonIcon/> {displayName} -<span className={classes.blueText}>&nbsp;{role}</span></div>
             <div className={classes.icons}>
-              <Search/>
-                <LogoutIcon onClick={logout}/>
+                <Search/>
+                <LogoutIcon className={classes.logout} onClick={logout}/>
             </div>
         </Toolbar>
     </AppBar>

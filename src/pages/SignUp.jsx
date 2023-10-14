@@ -93,7 +93,6 @@ function SignUp()
             </form>
             <div className="bottomLinks">
                 <div>Have an account? <Link to="/profile/signin" className="">Sign In</Link></div>
-                <div>Sign in as a Demo User</div>
             </div>
         </div>
         </>

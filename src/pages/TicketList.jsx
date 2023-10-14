@@ -71,10 +71,7 @@ function TicketList()
             ticketData.id = returnedDoc.id;
             setTickets((prev) => [...prev, ticketData]);
         });
-
        });
-      
-       
     }
     getTickets();
   },[]);

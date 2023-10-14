@@ -15,6 +15,7 @@ import TicketList from "./pages/TicketList";
 import GridTemplate from "./components/GridTemplate";
 import { useDispatch } from "react-redux";
 import { updateUser } from "./actions";
+import ForgotPassword from "./pages/ForgotPassword";
 
 
 
@@ -57,6 +58,7 @@ const App = () => {
                 <Route path='/profile/*'>
                     <Route path="signin" element={<SignIn/>}/>
                     <Route path="signup" element={<SignUp/>}/>
+                    <Route path="forgotPassword" element={<ForgotPassword/>}/>
                 </Route>
                 <Route path="/" element={<PrivateRoute />}>
                     <Route path='/' element={<GridTemplate/>}>

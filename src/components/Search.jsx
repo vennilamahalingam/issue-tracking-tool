@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme)=>({
       display : "flex",
       alignItems: "center",
       borderRadius: theme.shape.borderRadius,
-      width: "100%",
       marginLeft: "40px",
       marginRight: "40px",
         [theme.breakpoints.down("sm")] : {
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme)=>({
         marginLeft: theme.spacing(1),
         borderBottom: "1px solid #ddd",
         borderRadius: "0",
-        width: "100%"
+        width: "100%",
     },
     searchButton:{
       display: "block",
@@ -58,6 +57,7 @@ function Search() {
       const projectRef = collection(db,"projects");
       const pq = query(projectRef)
       getDocs(pq).then((pquerySnap)=>{
+        setProjects([]);
         pquerySnap.forEach((returnedDoc)=>{
           setProjects((prev) => [...prev, {title: returnedDoc.data().projectName, id: returnedDoc.id}]);
           
@@ -71,6 +71,7 @@ function Search() {
           const ticketRef = collection(db,"ticketListing");
           const pq = query(ticketRef)
           getDocs(pq).then((pquerySnap)=>{
+            setTickets([]);
             pquerySnap.forEach((returnedDoc)=>{
                 let {ticketTitle} = returnedDoc.data();
                 setTickets((prev) => [...prev, {title: ticketTitle, id: returnedDoc.id}]);
