@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { TextField } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../actions";
+import OAuth from "../components/OAuth";
 
 
 const SignIn = () =>
@@ -90,9 +91,11 @@ const SignIn = () =>
                 </div>
                 
                 <div className="button" onClick={() => onSubmit()}>
-                        Sign In
+                        Sign in with credentials
                 </div>
             </form>
+            <OAuth/>
+
             <div className="bottomLinks">
                 <div className="demoUserLink" onClick={handleDemoUser}>Sign in as a Demo User</div>
                 <div>Forgot your <Link to="/profile/forgotPassword" className="">password?</Link></div>                
